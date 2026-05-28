@@ -1,2 +1,2 @@
 # CozyTheHotel
-Membuat Aplikasi Manajemen Hotel
+Suatu Aplikasi Manajemen Hotel
