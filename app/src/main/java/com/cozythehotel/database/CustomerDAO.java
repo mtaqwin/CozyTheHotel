@@ -1,5 +1,6 @@
 package com.cozythehotel.database;
 
+import com.cozythehotel.model.Customer;
 import java.sql.*;
 
 public class CustomerDAO {
