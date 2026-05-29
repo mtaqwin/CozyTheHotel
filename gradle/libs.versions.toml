@@ -4,7 +4,15 @@
 [versions]
 guava = "33.4.6-jre"
 junit-jupiter = "5.12.1"
+javafx = "21.0.2"
+sqlite-jdbc = "3.45.3.0"
+slf4j = "2.0.12"
 
 [libraries]
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+javafx-controls = { module = "org.openjfx:javafx-controls", version.ref = "javafx" }
+javafx-graphics = { module = "org.openjfx:javafx-graphics", version.ref = "javafx" }
+javafx-base = { module = "org.openjfx:javafx-base", version.ref = "javafx" }
+sqlite-jdbc = { module = "org.xerial:sqlite-jdbc", version.ref = "sqlite-jdbc" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }

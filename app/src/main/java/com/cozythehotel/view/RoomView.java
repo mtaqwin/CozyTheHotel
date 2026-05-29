@@ -7,6 +7,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -100,7 +101,7 @@ public class RoomView {
         grid.setVgap(15);
         grid.setMaxWidth(Double.MAX_VALUE);
         for (int i = 0; i < 4; i++) {
-            javafx.scene.layout.ColumnConstraints col = new javafx.scene.layout.ColumnConstraints();
+            ColumnConstraints col = new ColumnConstraints();
             col.setPercentWidth(25);
             grid.getColumnConstraints().add(col);
         }
