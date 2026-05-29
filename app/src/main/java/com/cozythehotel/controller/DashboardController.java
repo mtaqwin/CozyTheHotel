@@ -1,37 +1,61 @@
 package com.cozythehotel.controller;
 
-import javafx.geometry.Pos;
+import com.cozythehotel.database.CustomerDAO;
+import com.cozythehotel.database.ReservationDAO;
+import com.cozythehotel.database.RoomDAO;
+import com.cozythehotel.view.DashboardView;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class DashboardController {
     private Stage panggung;
+    private DashboardView tampilan;
+    private RoomDAO daoKamar;
+    private ReservationDAO daoReservasi;
+    private CustomerDAO daoPelanggan;
 
     public DashboardController(Stage panggung) {
         this.panggung = panggung;
+        this.tampilan = new DashboardView();
+        this.daoKamar = new RoomDAO();
+        this.daoReservasi = new ReservationDAO();
+        this.daoPelanggan = new CustomerDAO();
+        
+        inisialisasiHandler();
+        perbaruiStatistik(java.time.LocalDate.now().toString());
+    }
+
+    private void inisialisasiHandler() {
+        tampilan.getPemilihTanggal().setOnAction(e -> {
+            if (tampilan.getPemilihTanggal().getValue() != null) {
+                perbaruiStatistik(tampilan.getPemilihTanggal().getValue().toString());
+            }
+        });
+
+        tampilan.getTombolTambahReservasi().setOnAction(e -> {
+            // Placeholder: new ReservationController(panggung).tampilkan();
+        });
+
+        tampilan.getTombolKelolaKamar().setOnAction(e -> new RoomController(panggung).tampilkan());
+        
+        tampilan.getTombolDataPelanggan().setOnAction(e -> new CustomerController(panggung).tampilkan());
+        
+        tampilan.getTombolCheckout().setOnAction(e -> new CheckoutController(panggung).tampilkan());
+    }
+
+    private void perbaruiStatistik(String tanggal) {
+        int totalKamar = daoKamar.getJumlahTotalKamar();
+        int terisi = daoReservasi.getJumlahTerisiBerdasarkanTanggal(tanggal);
+        int tersedia = totalKamar - terisi;
+        int tamuAktif = daoPelanggan.getJumlahTamuAktifBerdasarkanTanggal(tanggal);
+        
+        tampilan.setStatistik(tersedia, terisi, tamuAktif);
     }
 
     public void tampilkan() {
-        VBox akar = new VBox(30);
-        akar.setAlignment(Pos.CENTER);
-        akar.setStyle("-fx-background-color: #f4ebe1; -fx-padding: 50;");
-
-        Label judul = new Label("Dashboard CozyTheHotel");
-        judul.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #0c2340; -fx-font-family: 'Georgia';");
-
-        Button tombolKamar = new Button("Manajemen Kamar");
-        tombolKamar.setPrefSize(250, 60);
-        tombolKamar.setStyle("-fx-background-color: #0c2340; -fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold; -fx-background-radius: 10; -fx-cursor: hand;");
-        tombolKamar.setOnAction(e -> new RoomController(panggung).tampilkan());
-
-        akar.getChildren().addAll(judul, tombolKamar);
-
-        Scene adegan = new Scene(akar, 1100, 750);
+        Scene adegan = new Scene(tampilan.getAkar(), 1100, 750);
         panggung.setScene(adegan);
-        panggung.setTitle("Dashboard - CozyTheHotel");
+        panggung.setTitle("Dashboard Staff - CozyTheHotel");
         panggung.setMaximized(true);
         panggung.show();
     }
