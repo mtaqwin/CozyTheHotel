@@ -21,4 +21,36 @@ public class ReservationDAO {
             galat.printStackTrace();
         }
     }
+
+    public List<Reservation> getReservasiAktif() {
+        List<Reservation> daftar = new ArrayList<>();
+        String kueri = "SELECT r.*, c.name, c.phone, rm.room_number, rm.room_type " +
+                       "FROM reservations r " +
+                       "JOIN customers c ON r.customer_id = c.id " +
+                       "JOIN rooms rm ON r.room_id = rm.id " +
+                       "WHERE r.status = 'Belum Checkout'";
+        try (Connection koneksi = DBConnection.getConnection();
+             Statement pernyataan = koneksi.createStatement();
+             ResultSet hasil = pernyataan.executeQuery(kueri)) {
+            while (hasil.next()) {
+                Reservation res = new Reservation(
+                        hasil.getInt("id"),
+                        hasil.getInt("customer_id"),
+                        hasil.getInt("room_id"),
+                        hasil.getString("check_in"),
+                        hasil.getString("check_out"),
+                        hasil.getString("payment_method"),
+                        hasil.getString("status")
+                );
+                res.setNamaPelanggan(hasil.getString("name"));
+                res.setTeleponPelanggan(hasil.getString("phone"));
+                res.setNomorKamar(hasil.getString("room_number"));
+                res.setTipeKamar(hasil.getString("room_type"));
+                daftar.add(res);
+            }
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+        return daftar;
+    }
 }    
