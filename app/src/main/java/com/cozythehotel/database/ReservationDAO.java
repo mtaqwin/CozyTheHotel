@@ -81,29 +81,4 @@ public class ReservationDAO {
         }
         return 0;
     }
-
-    public int getJumlahTotalKamar() {
-        String kueri = "SELECT COUNT(*) FROM rooms";
-        try (Connection koneksi = DBConnection.getConnection();
-             Statement pernyataan = koneksi.createStatement();
-             ResultSet hasil = pernyataan.executeQuery(kueri)) {
-            if (hasil.next()) return hasil.getInt(1);
-        } catch (SQLException galat) {
-            galat.printStackTrace();
-        }
-        return 0;
-    }
-
-    public int getJumlahBerdasarkanStatus(String status) {
-        String kueri = "SELECT COUNT(*) FROM rooms WHERE status = ?";
-        try (Connection koneksi = DBConnection.getConnection();
-             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
-            pernyataan.setString(1, status);
-            ResultSet hasil = pernyataan.executeQuery();
-            if (hasil.next()) return hasil.getInt(1);
-        } catch (SQLException galat) {
-            galat.printStackTrace();
-        }
-        return 0;
-    }
 }    
