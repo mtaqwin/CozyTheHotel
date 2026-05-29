@@ -22,16 +22,18 @@ public class ReservationDAO {
         }
     }
 
-    public List<Reservation> getReservasiAktif() {
+    public List<Reservation> getReservasiBerdasarkanTanggal(String tanggal) {
         List<Reservation> daftar = new ArrayList<>();
         String kueri = "SELECT r.*, c.name, c.phone, rm.room_number, rm.room_type " +
                        "FROM reservations r " +
                        "JOIN customers c ON r.customer_id = c.id " +
                        "JOIN rooms rm ON r.room_id = rm.id " +
-                       "WHERE r.status = 'Belum Checkout'";
+                       "WHERE r.check_in <= ? AND r.check_out >= ? AND r.status = 'Belum Checkout'";
         try (Connection koneksi = DBConnection.getConnection();
-             Statement pernyataan = koneksi.createStatement();
-             ResultSet hasil = pernyataan.executeQuery(kueri)) {
+             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
+            pernyataan.setString(1, tanggal);
+            pernyataan.setString(2, tanggal);
+            ResultSet hasil = pernyataan.executeQuery();
             while (hasil.next()) {
                 Reservation res = new Reservation(
                         hasil.getInt("id"),
@@ -53,8 +55,20 @@ public class ReservationDAO {
         }
         return daftar;
     }
-    
-     public int getJumlahTerisiBerdasarkanTanggal(String tanggal) {
+
+    public void perbaruiStatusReservasi(int id, String status) {
+        String kueri = "UPDATE reservations SET status = ? WHERE id = ?";
+        try (Connection koneksi = DBConnection.getConnection();
+             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
+            pernyataan.setString(1, status);
+            pernyataan.setInt(2, id);
+            pernyataan.executeUpdate();
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+    }
+
+    public int getJumlahTerisiBerdasarkanTanggal(String tanggal) {
         String kueri = "SELECT COUNT(DISTINCT room_id) FROM reservations WHERE check_in <= ? AND check_out >= ? AND status = 'Belum Checkout'";
         try (Connection koneksi = DBConnection.getConnection();
              PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
@@ -78,19 +92,6 @@ public class ReservationDAO {
             galat.printStackTrace();
         }
         return 0;
-    }
-
-    public void perbaruiStatusKamar(int id, String status, String namaPelanggan) {
-        String kueri = "UPDATE rooms SET status = ?, customer_name = ? WHERE id = ?";
-        try (Connection koneksi = DBConnection.getConnection();
-             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
-            pernyataan.setString(1, status);
-            pernyataan.setString(2, namaPelanggan);
-            pernyataan.setInt(3, id);
-            pernyataan.executeUpdate();
-        } catch (SQLException galat) {
-            galat.printStackTrace();
-        }
     }
 
     public int getJumlahBerdasarkanStatus(String status) {
