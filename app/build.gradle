@@ -6,23 +6,29 @@
  */
 
 plugins {
-    // Apply the application plugin to add support for building a CLI application in Java.
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 dependencies {
-    // Use JUnit Jupiter for testing.
     testImplementation libs.junit.jupiter
-
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    // This dependency is used by the application.
     implementation libs.guava
+    implementation libs.javafx.controls
+    implementation libs.javafx.graphics
+    implementation libs.javafx.base
+    implementation libs.sqlite.jdbc
+    implementation libs.slf4j.simple
+}
+
+javafx {
+    version = "21.0.2"
+    modules = [ 'javafx.controls', 'javafx.graphics', 'javafx.base' ]
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
@@ -34,7 +40,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = 'cozythehotel.App'
+    mainClass = 'com.cozythehotel.Main'
 }
 
 tasks.named('test') {
