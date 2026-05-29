@@ -32,9 +32,7 @@ public class DashboardController {
             }
         });
 
-        tampilan.getTombolTambahReservasi().setOnAction(e -> {
-            // Placeholder: new ReservationController(panggung).tampilkan();
-        });
+        tampilan.getTombolTambahReservasi().setOnAction(e -> new ReservationController(panggung).tampilkan());
 
         tampilan.getTombolKelolaKamar().setOnAction(e -> new RoomController(panggung).tampilkan());
         
