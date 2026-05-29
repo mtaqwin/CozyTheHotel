@@ -2,17 +2,16 @@ package com.cozythehotel;
 
 import com.cozythehotel.controller.DashboardController;
 import com.cozythehotel.database.DBConnection;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) {
-        // Inisialisasi basis data saat aplikasi dimulai
+    public void start(Stage stage) {
         DBConnection.siapkanBasisData();
-        
-        // Tampilkan dashboard utama
-        DashboardController dashboard = new DashboardController(primaryStage);
+
+        DashboardController dashboard = new DashboardController(stage);
         dashboard.tampilkan();
     }
 
