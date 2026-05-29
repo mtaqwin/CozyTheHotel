@@ -54,5 +54,55 @@ public class ReservationDAO {
         return daftar;
     }
     
-    
+     public int getJumlahTerisiBerdasarkanTanggal(String tanggal) {
+        String kueri = "SELECT COUNT(DISTINCT room_id) FROM reservations WHERE check_in <= ? AND check_out >= ? AND status = 'Belum Checkout'";
+        try (Connection koneksi = DBConnection.getConnection();
+             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
+            pernyataan.setString(1, tanggal);
+            pernyataan.setString(2, tanggal);
+            ResultSet hasil = pernyataan.executeQuery();
+            if (hasil.next()) return hasil.getInt(1);
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int getJumlahTotalKamar() {
+        String kueri = "SELECT COUNT(*) FROM rooms";
+        try (Connection koneksi = DBConnection.getConnection();
+             Statement pernyataan = koneksi.createStatement();
+             ResultSet hasil = pernyataan.executeQuery(kueri)) {
+            if (hasil.next()) return hasil.getInt(1);
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void perbaruiStatusKamar(int id, String status, String namaPelanggan) {
+        String kueri = "UPDATE rooms SET status = ?, customer_name = ? WHERE id = ?";
+        try (Connection koneksi = DBConnection.getConnection();
+             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
+            pernyataan.setString(1, status);
+            pernyataan.setString(2, namaPelanggan);
+            pernyataan.setInt(3, id);
+            pernyataan.executeUpdate();
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+    }
+
+    public int getJumlahBerdasarkanStatus(String status) {
+        String kueri = "SELECT COUNT(*) FROM rooms WHERE status = ?";
+        try (Connection koneksi = DBConnection.getConnection();
+             PreparedStatement pernyataan = koneksi.prepareStatement(kueri)) {
+            pernyataan.setString(1, status);
+            ResultSet hasil = pernyataan.executeQuery();
+            if (hasil.next()) return hasil.getInt(1);
+        } catch (SQLException galat) {
+            galat.printStackTrace();
+        }
+        return 0;
+    }
 }    
